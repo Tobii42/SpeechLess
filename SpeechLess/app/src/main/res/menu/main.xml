@@ -6,6 +6,7 @@
         android:title="@string/action_new_item"
         android:icon="@drawable/ic_action_new"
         android:orderInCategory="100"
+        android:onClick="addItem"
         android:showAsAction="ifRoom" />
 
     <item android:id="@+id/action_settings"

@@ -1,26 +1,23 @@
 package de.ol.speechless.app;
 
 import android.app.Activity;
-import android.content.Intent;
+import android.graphics.Picture;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
+import android.view.View;
 
+import de.ol.speechless.model.SpeechItem;
 import de.ol.speechless.util.DataHelper;
 
-public class MainActivity extends Activity {
+public class NewItemActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        // Link the GridView to the data with custom adapter
-        SpeechItemListAdapter adapter = new SpeechItemListAdapter(this, R.layout.speech_grid_element, DataHelper.getSpeechItemList());
-        GridView speechGrid = (GridView) findViewById(R.id.itemGridView);
-        speechGrid.setAdapter(adapter);
+        setContentView(R.layout.activity_new_item);
     }
 
 
@@ -28,7 +25,7 @@ public class MainActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.new_item, menu);
         return true;
     }
 
@@ -45,11 +42,12 @@ public class MainActivity extends Activity {
     }
 
     /**
-     * Shows the Activity to add a new item (with picture and sound)
-     * @param item
+     * Creates a new item (with picture and sound) and adds it to the ItemList
+     * @param view
      */
-    public void addItem(MenuItem item) {
-        Intent startNewItemActivity = new Intent(this, NewItemActivity.class);
-        startActivity(startNewItemActivity);
+    public void createNewItem(View view) {
+        Drawable pic = getResources().getDrawable(R.drawable.santa_claus);
+        SpeechItem speechItem = new SpeechItem(pic, null);
+        DataHelper.addItemToList(speechItem);
     }
 }
