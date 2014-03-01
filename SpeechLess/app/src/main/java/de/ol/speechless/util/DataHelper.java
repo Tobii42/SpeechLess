@@ -31,4 +31,8 @@ public class DataHelper {
     public static void addItemToList(SpeechItem speechItem) {
         getSpeechItemList().add(speechItem);
     }
+
+    public static SpeechItem getItem(int id) {
+        return getSpeechItemList().get(id);
+    }
 }

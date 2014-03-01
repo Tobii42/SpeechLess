@@ -1,6 +1,7 @@
 package de.ol.speechless.model;
 
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.provider.MediaStore;
 
 /**
@@ -9,11 +10,11 @@ import android.provider.MediaStore;
 public class SpeechItem {
 
     Drawable picture;
-    MediaStore.Audio audio;
+    Uri audioUri;
 
-    public SpeechItem(Drawable picture, MediaStore.Audio audio) {
+    public SpeechItem(Drawable picture, Uri audioUri) {
         this.picture = picture;
-        this.audio = audio;
+        this.audioUri = audioUri;
     }
 
     public Drawable getPicture() {
@@ -24,11 +25,11 @@ public class SpeechItem {
         this.picture = picture;
     }
 
-    public MediaStore.Audio getAudio() {
-        return audio;
+    public Uri getAudioUri() {
+        return audioUri;
     }
 
-    public void setAudio(MediaStore.Audio audio) {
-        this.audio = audio;
+    public void setAudioUri(Uri audioUri) {
+        this.audioUri = audioUri;
     }
 }

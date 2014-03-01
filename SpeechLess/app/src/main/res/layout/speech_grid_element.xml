@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     android:weightSum="1">
 
-    <ImageButton
-        android:layout_width="86dp"
-        android:layout_height="106dp"
-        android:id="@+id/speechImageButton" />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/speechImageView" />
 </LinearLayout>

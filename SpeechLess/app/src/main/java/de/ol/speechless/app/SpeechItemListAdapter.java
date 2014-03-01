@@ -9,7 +9,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import de.ol.speechless.model.SpeechItem;
 
@@ -37,9 +36,9 @@ public class SpeechItemListAdapter extends ArrayAdapter<SpeechItem> {
     public View getView (int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(getContext().LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.speech_grid_element, parent, false);
-        ImageButton imageButton = (ImageButton) rowView.findViewById(R.id.speechImageButton);
+        ImageView imageView = (ImageView) rowView.findViewById(R.id.speechImageView);
         if(position < objects.size())
-            imageButton.setImageDrawable(objects.get(position).getPicture());
+            imageView.setImageDrawable(objects.get(position).getPicture());
         return rowView;
     }
 }

@@ -25,7 +25,8 @@
         android:id="@+id/button2"
         android:layout_below="@+id/textView2"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:onClick="chooseAudio"/>
 
     <Button
         android:layout_width="wrap_content"

@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -23,9 +22,11 @@ import de.ol.speechless.util.DataHelper;
 
 public class NewItemActivity extends Activity {
 
-    private static final int SELECT_PHOTO = 100;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int SELECT_PHOTO = 2;
+    private static final int SELECT_AUDIO = 3;
     private Drawable image;
+    private Uri audio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,9 +54,17 @@ public class NewItemActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Handle results from intents
+     * e.g. choosing a picture from the gallery or taking a picture with the camera
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Bitmap imageBitmap = null;
+        Uri selectedAudio = null;
 
         // Get the image from the camera
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
@@ -68,8 +77,11 @@ public class NewItemActivity extends Activity {
                 InputStream imageStream = getContentResolver().openInputStream(selectedImage);
                 imageBitmap = BitmapFactory.decodeStream(imageStream);
             } catch (FileNotFoundException fileException) {
-                imageBitmap = null; // Let it null
+                // Do nothing, imageBitmap is and stays null
             }
+        } else if(requestCode == SELECT_AUDIO && resultCode == RESULT_OK) {
+            // Get audio from audio-picker
+            selectedAudio = data.getData();
         }
 
         if(imageBitmap != null) {
@@ -81,6 +93,11 @@ public class NewItemActivity extends Activity {
             preview.setImageDrawable(image);
         }
 
+        if(selectedAudio != null) {
+            // We got an audio-file-uri
+            audio = selectedAudio;
+        }
+
     }
 
     /**
@@ -89,8 +106,8 @@ public class NewItemActivity extends Activity {
      * @param view
      */
     public void createNewItem(View view) {
-        if(image != null) {
-            SpeechItem speechItem = new SpeechItem(image, null);
+        if(image != null && audio != null) {
+            SpeechItem speechItem = new SpeechItem(image, audio);
             DataHelper.addItemToList(speechItem);
         }
     }
@@ -120,5 +137,18 @@ public class NewItemActivity extends Activity {
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
+    }
+
+    /**
+     * Let the user choose an audio file
+     *
+     * @param view
+     */
+    public void chooseAudio(View view) {
+        Intent intent = new Intent();
+        intent.setType("audio/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        // Let him choose with that automatically generated chooser
+        startActivityForResult(Intent.createChooser(intent, getString(R.string.new_item_audio_chooser)), SELECT_AUDIO);
     }
 }

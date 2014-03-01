@@ -12,5 +12,6 @@
     <string name="new_item_audio_button">Choose sound</string>
     <string name="new_item_picture_label">Picture</string>
     <string name="new_item_audio_label">Sound</string>
+    <string name="new_item_audio_chooser">Select Audio</string>
 
 </resources>
