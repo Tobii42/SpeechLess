@@ -1,18 +1,31 @@
 package de.ol.speechless.app;
 
 import android.app.Activity;
-import android.graphics.Picture;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.PictureDrawable;
+import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import de.ol.speechless.model.SpeechItem;
 import de.ol.speechless.util.DataHelper;
 
 public class NewItemActivity extends Activity {
+
+    private static final int SELECT_PHOTO = 100;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private Drawable image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,10 +33,9 @@ public class NewItemActivity extends Activity {
         setContentView(R.layout.activity_new_item);
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        
+
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.new_item, menu);
         return true;
@@ -41,13 +53,72 @@ public class NewItemActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Bitmap imageBitmap = null;
+
+        // Get the image from the camera
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            imageBitmap = (Bitmap) extras.get("data");
+        } else if(requestCode == SELECT_PHOTO && resultCode == RESULT_OK) {
+            // Get the image from the gallery
+            Uri selectedImage = data.getData();
+            try {
+                InputStream imageStream = getContentResolver().openInputStream(selectedImage);
+                imageBitmap = BitmapFactory.decodeStream(imageStream);
+            } catch (FileNotFoundException fileException) {
+                imageBitmap = null; // Let it null
+            }
+        }
+
+        if(imageBitmap != null) {
+            // We got a picture
+            image = new BitmapDrawable(getResources(), imageBitmap); // save for use in list
+
+            // Show the image in the preview
+            ImageView preview = (ImageView) findViewById(R.id.imagePreview);
+            preview.setImageDrawable(image);
+        }
+
+    }
+
     /**
      * Creates a new item (with picture and sound) and adds it to the ItemList
+     *
      * @param view
      */
     public void createNewItem(View view) {
-        Drawable pic = getResources().getDrawable(R.drawable.santa_claus);
-        SpeechItem speechItem = new SpeechItem(pic, null);
-        DataHelper.addItemToList(speechItem);
+        if(image != null) {
+            SpeechItem speechItem = new SpeechItem(image, null);
+            DataHelper.addItemToList(speechItem);
+        }
+    }
+
+    /**
+     * Let the user choose a picture from the gallery
+     *
+     * @param view
+     */
+    public void choosePicture(View view) {
+        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+        photoPickerIntent.setType("image/*");
+        // Check if there's an app which can handle this intent
+        if (photoPickerIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+        }
+    }
+
+    /**
+     * Let the user take a picture with the camera
+     *
+     * @param view
+     */
+    public void takePicture(View view) {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Check if there's an app which can handle this intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
     }
 }

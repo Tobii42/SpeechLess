@@ -18,9 +18,11 @@ import de.ol.speechless.model.SpeechItem;
  */
 public class SpeechItemListAdapter extends ArrayAdapter<SpeechItem> {
 
+    ArrayList<SpeechItem> objects;
 
     public SpeechItemListAdapter(Context context, int resource, ArrayList<SpeechItem> objects) {
         super(context, resource, objects);
+        this.objects = objects;
     }
 
     /**
@@ -36,7 +38,8 @@ public class SpeechItemListAdapter extends ArrayAdapter<SpeechItem> {
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(getContext().LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.speech_grid_element, parent, false);
         ImageButton imageButton = (ImageButton) rowView.findViewById(R.id.speechImageButton);
-        imageButton.setImageResource(R.drawable.santa_claus);
+        if(position < objects.size())
+            imageButton.setImageDrawable(objects.get(position).getPicture());
         return rowView;
     }
 }

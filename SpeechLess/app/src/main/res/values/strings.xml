@@ -5,6 +5,12 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="action_new_item">New Item</string>
-    <string name="title_activity_new_item">New Item</string><string name="new_item_button_label">Create new item</string>
+    <string name="title_activity_new_item">New Item</string>
+    <string name="new_item_save_button">Create new item</string>
+    <string name="new_item_picture_gallery_button">Choose a picture</string>
+    <string name="new_item_picture_camera_button">Take a picture</string>
+    <string name="new_item_audio_button">Choose sound</string>
+    <string name="new_item_picture_label">Picture</string>
+    <string name="new_item_audio_label">Sound</string>
 
 </resources>
