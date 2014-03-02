@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import java.util.ArrayList;
 
 import de.ol.speechless.model.SpeechItem;
+import de.ol.speechless.util.DataHelper;
 
 /**
  * Created by Tobias on 01.03.14.
@@ -38,7 +39,7 @@ public class SpeechItemListAdapter extends ArrayAdapter<SpeechItem> {
         View rowView = inflater.inflate(R.layout.speech_grid_element, parent, false);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.speechImageView);
         if(position < objects.size())
-            imageView.setImageDrawable(objects.get(position).getPicture());
+            imageView.setImageDrawable(DataHelper.getImageFromFile(getContext(), DataHelper.getItem(position).getPictureUri()));
         return rowView;
     }
 }

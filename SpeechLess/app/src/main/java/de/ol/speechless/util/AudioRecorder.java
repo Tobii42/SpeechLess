@@ -2,10 +2,8 @@ package de.ol.speechless.util;
 
 import android.media.MediaRecorder;
 import android.net.Uri;
-import android.os.Environment;
 
 import java.io.File;
-import java.io.FileDescriptor;
 import java.io.IOException;
 
 /**
@@ -20,7 +18,7 @@ public class AudioRecorder {
      * Creates a new audio-recorder
      */
     public AudioRecorder() {
-        path = DataHelper.getDirectoryToSave().getAbsolutePath() + "/sl_" + DataHelper.getNumberOfEntries() + ".3gp";
+        path = DataHelper.getNextAudioFileName();
     }
 
     /**

@@ -9,20 +9,20 @@ import android.provider.MediaStore;
  */
 public class SpeechItem {
 
-    Drawable picture;
+    Uri pictureUri;
     Uri audioUri;
 
-    public SpeechItem(Drawable picture, Uri audioUri) {
-        this.picture = picture;
+    public SpeechItem(Uri pictureUri, Uri audioUri) {
+        this.pictureUri = pictureUri;
         this.audioUri = audioUri;
     }
 
-    public Drawable getPicture() {
-        return picture;
+    public Uri getPictureUri() {
+        return pictureUri;
     }
 
-    public void setPicture(Drawable picture) {
-        this.picture = picture;
+    public void setPictureUri(Uri pictureUri) {
+        this.pictureUri = pictureUri;
     }
 
     public Uri getAudioUri() {

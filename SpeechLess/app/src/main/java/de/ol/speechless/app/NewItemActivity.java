@@ -8,13 +8,16 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 
 import de.ol.speechless.model.SpeechItem;
@@ -27,7 +30,8 @@ public class NewItemActivity extends Activity {
     private static final int SELECT_PHOTO = 2;
     private static final int SELECT_AUDIO = 3;
 
-    private Drawable image;
+    private Uri image;
+    private Uri imageToCapture; // Uri of the image that has to be made with the camera-app
     private Uri audio;
     private AudioRecorder audioRecorder;
 
@@ -66,41 +70,37 @@ public class NewItemActivity extends Activity {
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Bitmap imageBitmap = null;
+        Uri selectedImage = null;
         Uri selectedAudio = null;
 
         // Get the image from the camera
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            Bundle extras = data.getExtras();
-            imageBitmap = (Bitmap) extras.get("data");
+            // The camera app does not return anything, but we know that we got a
+            // picture in the Uri that we gave to the camera (imageToCapture)
+            selectedImage = imageToCapture;
+
         } else if(requestCode == SELECT_PHOTO && resultCode == RESULT_OK) {
             // Get the image from the gallery
-            Uri selectedImage = data.getData();
-            try {
-                InputStream imageStream = getContentResolver().openInputStream(selectedImage);
-                imageBitmap = BitmapFactory.decodeStream(imageStream);
-            } catch (FileNotFoundException fileException) {
-                // Do nothing, imageBitmap is and stays null
-            }
+             selectedImage = data.getData();
+
         } else if(requestCode == SELECT_AUDIO && resultCode == RESULT_OK) {
             // Get audio from audio-picker
             selectedAudio = data.getData();
         }
 
-        if(imageBitmap != null) {
+        if(selectedImage != null) {
             // We got a picture
-            image = new BitmapDrawable(getResources(), imageBitmap); // save for use in list
+            image = selectedImage;
 
             // Show the image in the preview
             ImageView preview = (ImageView) findViewById(R.id.imagePreview);
-            preview.setImageDrawable(image);
+            preview.setImageDrawable(DataHelper.getImageFromFile(this, image));
         }
 
         if(selectedAudio != null) {
             // We got an audio-file-uri
             audio = selectedAudio;
         }
-
     }
 
     /**
@@ -136,6 +136,9 @@ public class NewItemActivity extends Activity {
      */
     public void takePicture(View view) {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        imageToCapture = Uri.fromFile(new File(DataHelper.getNextImageFileName()));
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageToCapture); // set the image file name
+
         // Check if there's an app which can handle this intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
