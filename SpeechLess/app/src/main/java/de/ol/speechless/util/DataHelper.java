@@ -75,7 +75,11 @@ public class DataHelper {
     public static String getNextAudioFileName() {
         Calendar c = Calendar.getInstance();
         String date = c.getTime().toString();
-        return getDirectoryToSaveAudio().getAbsolutePath() + "/sl_" + date + ".3gp";
+        String dir = getDirectoryToSaveAudio().getAbsolutePath() + "/SpeechLess";
+        // Create folders if necessary
+        File file = new File(dir);
+        file.mkdirs();
+        return dir + "/sl_" + date + ".3gp";
     }
 
     /**
@@ -85,7 +89,11 @@ public class DataHelper {
     public static String getNextImageFileName() {
         Calendar c = Calendar.getInstance();
         String date = c.getTime().toString();
-        return getDirectoryToSaveImage().getAbsolutePath() + "/sl_" + date + ".png";
+        String dir = getDirectoryToSaveImage().getAbsolutePath() + "/SpeechLess";
+        // Create folders if necessary
+        File file = new File(dir);
+        file.mkdirs();
+        return dir + "/sl_" + date + ".png";
     }
 
     /**
@@ -134,5 +142,12 @@ public class DataHelper {
 
         }
         return drawable;
+    }
+
+    /**
+     * Saves the list in a SQLite-database so that it can be accessed even if the app was closed
+     */
+    private static void saveList() {
+
     }
 }
