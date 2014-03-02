@@ -1,5 +1,8 @@
 package de.ol.speechless.util;
 
+import android.os.Environment;
+
+import java.io.File;
 import java.util.ArrayList;
 
 import de.ol.speechless.model.SpeechItem;
@@ -34,5 +37,13 @@ public class DataHelper {
 
     public static SpeechItem getItem(int id) {
         return getSpeechItemList().get(id);
+    }
+
+    public static File getDirectoryToSave() {
+        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS);
+    }
+
+    public static int getNumberOfEntries() {
+        return getSpeechItemList().size();
     }
 }

@@ -18,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 import de.ol.speechless.model.SpeechItem;
+import de.ol.speechless.util.AudioRecorder;
 import de.ol.speechless.util.DataHelper;
 
 public class NewItemActivity extends Activity {
@@ -25,8 +26,10 @@ public class NewItemActivity extends Activity {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int SELECT_PHOTO = 2;
     private static final int SELECT_AUDIO = 3;
+
     private Drawable image;
     private Uri audio;
+    private AudioRecorder audioRecorder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,5 +153,26 @@ public class NewItemActivity extends Activity {
         intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         // Let him choose with that automatically generated chooser
         startActivityForResult(Intent.createChooser(intent, getString(R.string.new_item_audio_chooser)), SELECT_AUDIO);
+    }
+
+    /**
+     * Let the user record an audio file
+     *
+     * @param view
+     */
+    public void startRecordingAudio(View view) {
+        audioRecorder = new AudioRecorder();
+        audioRecorder.startRecording();
+    }
+
+    /**
+     * Stop recording
+     *
+     * @param view
+     */
+    public void stopRecordingAudio(View view) {
+        if(audioRecorder != null) {
+            audio = audioRecorder.stopRecording();
+        }
     }
 }

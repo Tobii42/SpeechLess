@@ -13,6 +13,6 @@
     <string name="new_item_picture_label">Picture</string>
     <string name="new_item_audio_label">Sound</string>
     <string name="new_item_audio_chooser">Select Audio</string>
-    <string name="error_play_sound">Error playing sound</string>
+    <string name="error_play_sound">Error playing sound</string><string name="new_item_audio_record">Record audio</string><string name="new_item_audio_stop_record">Stop recording</string>
 
 </resources>
