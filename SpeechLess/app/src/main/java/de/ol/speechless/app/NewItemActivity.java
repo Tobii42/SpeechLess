@@ -147,7 +147,7 @@ public class NewItemActivity extends Activity {
     public void chooseAudio(View view) {
         Intent intent = new Intent();
         intent.setType("audio/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
         // Let him choose with that automatically generated chooser
         startActivityForResult(Intent.createChooser(intent, getString(R.string.new_item_audio_chooser)), SELECT_AUDIO);
     }
