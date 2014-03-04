@@ -27,7 +27,7 @@ public class SpeechItemClickListener implements AdapterView.OnItemClickListener 
 
         // Play the sound
         MediaPlayer mediaPlayer = new MediaPlayer();
-        Uri uri = DataHelper.getItem(position).getAudioUri();
+        Uri uri = DataHelper.getItem(position, view.getContext()).getAudioUri();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 
         try {

@@ -39,7 +39,7 @@ public class SpeechItemListAdapter extends ArrayAdapter<SpeechItem> {
         View rowView = inflater.inflate(R.layout.speech_grid_element, parent, false);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.speechImageView);
         if(position < objects.size())
-            imageView.setImageDrawable(DataHelper.getImageFromFile(getContext(), DataHelper.getItem(position).getPictureUri()));
+            imageView.setImageDrawable(DataHelper.getImageFromFile(getContext(), DataHelper.getItem(position, getContext()).getPictureUri()));
         return rowView;
     }
 }

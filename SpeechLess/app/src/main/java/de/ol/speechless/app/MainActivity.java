@@ -18,7 +18,7 @@ public class MainActivity extends Activity {
 
         // Link the GridView to the data with custom adapter
         SpeechItemListAdapter adapter = new SpeechItemListAdapter(this,
-                R.layout.speech_grid_element, DataHelper.getSpeechItemList());
+                R.layout.speech_grid_element, DataHelper.getSpeechItemList(this));
         GridView speechGrid = (GridView) findViewById(R.id.itemGridView);
         speechGrid.setAdapter(adapter);
 

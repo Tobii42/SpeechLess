@@ -15,7 +15,7 @@ public class SpeechDataContract {
     public static abstract class SpeechEntry implements BaseColumns {
         public static final String TABLE_NAME = "speech_items";
         public static final String _ID = "_ID";
-        public static final String COLUMN_NAME_COL1 = "image_uri";
-        public static final String COLUMN_NAME_COL2 = "audio_uir";
+        public static final String COLUMN_NAME_COL_IMAGE_URI = "image_uri";
+        public static final String COLUMN_NAME_AUDIO_URI = "audio_uri";
     }
 }
