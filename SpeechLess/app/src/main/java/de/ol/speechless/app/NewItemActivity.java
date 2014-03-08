@@ -22,6 +22,8 @@ public class NewItemActivity extends Activity {
     private static final int SELECT_PHOTO = 2;
     private static final int SELECT_AUDIO = 3;
 
+    private static final int IMAGE_WIDTH = 300;
+
     private Uri image;
     private Uri imageToCapture; // Uri of the image that has to be made with the camera-app
     private Uri audio;
@@ -88,7 +90,7 @@ public class NewItemActivity extends Activity {
 
             // Show the image in the preview
             ImageView preview = (ImageView) findViewById(R.id.imagePreview);
-            preview.setImageDrawable(DataHelper.getImageFromFile(this, image));
+            preview.setImageDrawable(DataHelper.getImageFromFile(this, image, IMAGE_WIDTH));
 
             // Take permission
             //getContentResolver().takePersistableUriPermission(selectedImage, takeFlags);
@@ -125,6 +127,7 @@ public class NewItemActivity extends Activity {
         photoPickerIntent.setType("image/*");
         // Check if there's an app which can handle this intent
         if (photoPickerIntent.resolveActivity(getPackageManager()) != null) {
+
             takeFlags = photoPickerIntent.getFlags()
                     & (Intent.FLAG_GRANT_READ_URI_PERMISSION
                     | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);

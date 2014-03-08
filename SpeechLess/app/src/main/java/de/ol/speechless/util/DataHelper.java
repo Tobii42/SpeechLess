@@ -5,12 +5,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -142,12 +143,36 @@ public class DataHelper {
         return uri;
     }
 
-    public static Drawable getImageFromFile(Context context, Uri uri) {
+    /**
+     * Returns the image in a lower quality
+     * @param context
+     * @param uri
+     * @param width The width of the image the method returns (e.g. 300)
+     * @return
+     */
+    public static Drawable getImageFromFile(Context context, Uri uri, int width) {
         Drawable drawable = null;
         try {
+            // Determining the original size of the image:
+            BitmapFactory.Options optionsSizeOnly = new BitmapFactory.Options();
+            optionsSizeOnly.inJustDecodeBounds = true;
+            InputStream inputStreamSizeOnly = context.getContentResolver().openInputStream(uri);
+            BitmapFactory.decodeStream(inputStreamSizeOnly, null, optionsSizeOnly);
+            int widthOriginal = optionsSizeOnly.outWidth;
+
+            // Determining the scale ratio.
+            // Note, it's just an example, you should use more sophisticated algorithm:
+            int ratio = widthOriginal / width; // widthView is supposed to be known
+
+            // Now loading the scaled image:
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = ratio;
+
             InputStream inputStream = context.getContentResolver().openInputStream(uri);
-            drawable = Drawable.createFromStream(inputStream, uri.toString() );
-        } catch (FileNotFoundException e) {
+            Bitmap bitmap = BitmapFactory.decodeStream(inputStream, null, options);
+            drawable = new BitmapDrawable(context.getResources(), bitmap);
+            inputStream.close();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return drawable;
@@ -174,6 +199,9 @@ public class DataHelper {
                 SpeechDataContract.SpeechEntry.TABLE_NAME,
                 null,
                 values);
+
+        db.close();
+        databaseHelper.close();
     }
 
     /**
@@ -190,20 +218,19 @@ public class DataHelper {
         };
 
         // How you want the results sorted in the resulting Cursor
-        String sortOrder =
-                SpeechDataContract.SpeechEntry._ID + " DESC";
+        String sortOrder = SpeechDataContract.SpeechEntry._ID + " DESC";
 
         String selection = "";
         String[] selectionArgs = {""};
 
         Cursor cursor = db.query(
-                SpeechDataContract.SpeechEntry.TABLE_NAME, // The table to query
-                projection,                               // The columns to return
-                null,                                // The columns for the WHERE clause
-                null,                            // The values for the WHERE clause
-                null,                                     // don't group the rows
-                null,                                     // don't filter by row groups
-                null                                 // The sort order
+                SpeechDataContract.SpeechEntry.TABLE_NAME,  // The table to query
+                projection,                                 // The columns to return
+                null,                                       // The columns for the WHERE clause
+                null,                                       // The values for the WHERE clause
+                null,                                       // don't group the rows
+                null,                                       // don't filter by row groups
+                null                                        // The sort order
         );
 
         // Go through the cursor and get the values into an ArrayList
@@ -212,16 +239,20 @@ public class DataHelper {
         cursor.moveToFirst();
         while(!cursor.isAfterLast()) {
             int imageColumn = cursor.getColumnIndex(SpeechDataContract.SpeechEntry.COLUMN_NAME_COL_IMAGE_URI);
-            Uri imageUri = Uri.fromFile(new File(cursor.getString(imageColumn)));
+            Uri imageUri = Uri.parse(cursor.getString(imageColumn));
 
             int audioColumn = cursor.getColumnIndex(SpeechDataContract.SpeechEntry.COLUMN_NAME_AUDIO_URI);
-            Uri audioUri = Uri.fromFile(new File(cursor.getString(audioColumn)));
+            Uri audioUri = Uri.parse(cursor.getString(audioColumn));
 
             SpeechItem newItem = new SpeechItem(imageUri, audioUri);
             speechItems.add(newItem);
 
             cursor.moveToNext();
         }
+
+        cursor.close();
+        db.close();
+        databaseHelper.close();
 
         return speechItems;
     }

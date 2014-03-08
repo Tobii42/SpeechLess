@@ -19,6 +19,7 @@ import de.ol.speechless.util.DataHelper;
 public class SpeechItemListAdapter extends ArrayAdapter<SpeechItem> {
 
     ArrayList<SpeechItem> objects;
+    private int IMAGE_WIDTH = 300;    // width of the images in the overview
 
     public SpeechItemListAdapter(Context context, int resource, ArrayList<SpeechItem> objects) {
         super(context, resource, objects);
@@ -39,7 +40,7 @@ public class SpeechItemListAdapter extends ArrayAdapter<SpeechItem> {
         View rowView = inflater.inflate(R.layout.speech_grid_element, parent, false);
         ImageView imageView = (ImageView) rowView.findViewById(R.id.speechImageView);
         if(position < objects.size())
-            imageView.setImageDrawable(DataHelper.getImageFromFile(getContext(), DataHelper.getItem(position, getContext()).getPictureUri()));
+            imageView.setImageDrawable(DataHelper.getImageFromFile(getContext(), objects.get(position).getPictureUri(), IMAGE_WIDTH));
         return rowView;
     }
 }

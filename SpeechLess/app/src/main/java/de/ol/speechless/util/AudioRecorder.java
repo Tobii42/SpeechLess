@@ -55,8 +55,7 @@ public class AudioRecorder {
      * @return Uri to the audio-file
      */
     private Uri getAudioUri() {
-        File file = new File(path);
-        Uri uri = Uri.fromFile(file);
+        Uri uri = Uri.parse(path);
         return uri;
     }
 }
