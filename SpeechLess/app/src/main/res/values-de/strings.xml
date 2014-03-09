@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SpeechLess</string>
+    <string name="hello_world">Hallo Welt!</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="action_new_item">Neuer Eintrag</string>
+    <string name="title_activity_new_item">Neuer Eintrag</string>
+    <string name="new_item_save_button">Erstellen</string>
+    <string name="new_item_picture_gallery_button">Bild auswählen</string>
+    <string name="new_item_picture_camera_button">Foto aufnehmen</string>
+    <string name="new_item_audio_button">Ton auswählen</string>
+    <string name="new_item_picture_label">Bild</string>
+    <string name="new_item_audio_label">Ton</string>
+    <string name="new_item_audio_chooser">Ton auswählen</string>
+    <string name="error_play_sound">Fehler bei der Wiedergabe</string>
+    <string name="new_item_audio_record">Aufnahme starten</string>
+    <string name="new_item_audio_stop_record">Aufnahme anhalten</string>
+
+</resources>
