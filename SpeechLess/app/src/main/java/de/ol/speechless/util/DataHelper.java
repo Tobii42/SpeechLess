@@ -2,6 +2,7 @@ package de.ol.speechless.util;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
@@ -9,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 
 import java.io.File;
@@ -66,8 +68,8 @@ public class DataHelper {
      * Returns the directory where to save audio-files
      * @return
      */
-    public static File getDirectoryToSaveAudio() {
-        return Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PODCASTS);
+    public static File getDirectoryToSaveAudio(Context context) {
+        return context.getExternalFilesDir(Environment.DIRECTORY_PODCASTS);
     }
 
     /**
@@ -82,14 +84,14 @@ public class DataHelper {
      * Returns the path where the next audio-file has to be saved
      * @return
      */
-    public static String getNextAudioFileName() {
+    public static File getNextAudioFile(Context context) {
         Calendar c = Calendar.getInstance();
         String date = c.getTime().toString();
-        String dir = getDirectoryToSaveAudio().getAbsolutePath() + "/SpeechLess";
+        String dir = getDirectoryToSaveAudio(context).getAbsolutePath();
         // Create folders if necessary
         File file = new File(dir);
         file.mkdirs();
-        return dir + "/sl_" + date + ".3gp";
+        return new File(dir, "/sl_" + date + ".3gp");
     }
 
     /**
