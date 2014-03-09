@@ -94,6 +94,7 @@ public class NewItemActivity extends Activity {
             preview.setImageDrawable(DataHelper.getImageFromFile(this, image, IMAGE_WIDTH));
 
             // Take permission
+            // Maybe we don't need this cause all th data is external / public?
 //            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 //                final int takeFlags = data.getFlags()
 //                        & (Intent.FLAG_GRANT_READ_URI_PERMISSION
@@ -128,6 +129,10 @@ public class NewItemActivity extends Activity {
         if (image != null && audio != null) {
             SpeechItem speechItem = new SpeechItem(image, audio);
             DataHelper.addItemToList(speechItem, this);
+
+            // Open Main-Screen (MainActivity)
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
         }
     }
 
