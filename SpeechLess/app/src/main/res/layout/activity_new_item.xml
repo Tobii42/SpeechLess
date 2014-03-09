@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/new_item_audio_button"
-        android:id="@+id/button2"
+        android:id="@+id/chooseAudioButton"
         android:layout_below="@+id/textView2"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
@@ -34,9 +34,10 @@
         android:text="@string/new_item_save_button"
         android:id="@+id/createNewItemButton"
         android:onClick="createNewItem"
-        android:layout_below="@+id/button4"
+        android:layout_below="@+id/button5"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="30dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -66,7 +67,7 @@
         android:layout_alignTop="@+id/button"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_above="@+id/button2" />
+        android:layout_above="@+id/chooseAudioButton" />
 
     <Button
         android:layout_width="wrap_content"
@@ -82,19 +83,29 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/new_item_audio_record"
-        android:id="@+id/button4"
-        android:layout_below="@+id/button2"
+        android:id="@+id/recordAudioButton"
+        android:layout_below="@+id/chooseAudioButton"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:onClick="startRecordingAudio"/>
+        android:onClick="startRecordingAudio" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/new_item_audio_stop_record"
         android:id="@+id/button5"
-        android:layout_alignTop="@+id/button4"
-        android:layout_toRightOf="@+id/button4"
-        android:onClick="stopRecordingAudio"/>
+        android:onClick="stopRecordingAudio"
+        android:layout_below="@+id/recordAudioButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/nowRecordingImageView"
+        android:src="@drawable/ic_action_mic"
+        android:layout_toRightOf="@+id/recordAudioButton"
+        android:layout_alignTop="@+id/recordAudioButton"
+        android:visibility="invisible" />
 
 </RelativeLayout>

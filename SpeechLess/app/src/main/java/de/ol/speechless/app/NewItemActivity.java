@@ -2,6 +2,7 @@ package de.ol.speechless.app;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.File;
 
@@ -188,6 +190,8 @@ public class NewItemActivity extends Activity {
     public void startRecordingAudio(View view) {
         audioRecorder = new AudioRecorder(this);
         audioRecorder.startRecording();
+        ImageView nowRecording = (ImageView) findViewById(R.id.nowRecordingImageView);
+        nowRecording.setVisibility(ImageView.VISIBLE);
     }
 
     /**
@@ -198,6 +202,8 @@ public class NewItemActivity extends Activity {
     public void stopRecordingAudio(View view) {
         if (audioRecorder != null) {
             audio = audioRecorder.stopRecording(this);
+            ImageView nowRecording = (ImageView) findViewById(R.id.nowRecordingImageView);
+            nowRecording.setVisibility(ImageView.INVISIBLE);
         }
     }
 }
