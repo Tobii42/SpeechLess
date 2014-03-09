@@ -1,7 +1,9 @@
 package de.ol.speechless.util;
 
+import android.content.Context;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.support.v4.content.FileProvider;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,13 +14,13 @@ import java.io.IOException;
 public class AudioRecorder {
 
     private MediaRecorder mediaRecorder;
-    private String path;
+    private File path;
 
     /**
      * Creates a new audio-recorder
      */
-    public AudioRecorder() {
-        path = DataHelper.getNextAudioFileName();
+    public AudioRecorder(Context context) {
+        path = DataHelper.getNextAudioFile(context);
     }
 
     /**
@@ -28,7 +30,7 @@ public class AudioRecorder {
         mediaRecorder = new MediaRecorder();
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mediaRecorder.setOutputFile(path);
+        mediaRecorder.setOutputFile(path.getPath());
         mediaRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
         try {
@@ -43,19 +45,19 @@ public class AudioRecorder {
      * Stops recording
      * @return Uri to the audio-file
      */
-    public Uri stopRecording() {
+    public Uri stopRecording(Context context) {
         mediaRecorder.stop();
         mediaRecorder.release();
         mediaRecorder = null;
-        return getAudioUri();
+        return getAudioUri(context);
     }
 
     /**
      *
      * @return Uri to the audio-file
      */
-    private Uri getAudioUri() {
-        Uri uri = Uri.parse(path);
-        return uri;
+    private Uri getAudioUri(Context context) {
+        Uri contentUri = FileProvider.getUriForFile(context, "de.ol.speechless.fileprovider", path);
+        return contentUri;
     }
 }

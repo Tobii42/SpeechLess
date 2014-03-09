@@ -3,6 +3,7 @@ package de.ol.speechless.app;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Menu;
@@ -28,8 +29,6 @@ public class NewItemActivity extends Activity {
     private Uri imageToCapture; // Uri of the image that has to be made with the camera-app
     private Uri audio;
     private AudioRecorder audioRecorder;
-
-    private int takeFlags; // To "take" the permissions to access the files (persistent, after reboot, ...)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +59,7 @@ public class NewItemActivity extends Activity {
     /**
      * Handle results from intents
      * e.g. choosing a picture from the gallery or taking a picture with the camera
+     *
      * @param requestCode
      * @param resultCode
      * @param data
@@ -75,16 +75,17 @@ public class NewItemActivity extends Activity {
             // picture in the Uri that we gave to the camera (imageToCapture)
             selectedImage = imageToCapture;
 
-        } else if(requestCode == SELECT_PHOTO && resultCode == RESULT_OK) {
+        } else if (requestCode == SELECT_PHOTO && resultCode == RESULT_OK) {
             // Get the image from the gallery
-             selectedImage = data.getData();
+            selectedImage = data.getData();
 
-        } else if(requestCode == SELECT_AUDIO && resultCode == RESULT_OK) {
+        } else if (requestCode == SELECT_AUDIO && resultCode == RESULT_OK) {
             // Get audio from audio-picker
             selectedAudio = data.getData();
         }
 
-        if(selectedImage != null) {
+
+        if (selectedImage != null) {
             // We got a picture
             image = selectedImage;
 
@@ -93,15 +94,28 @@ public class NewItemActivity extends Activity {
             preview.setImageDrawable(DataHelper.getImageFromFile(this, image, IMAGE_WIDTH));
 
             // Take permission
-            //getContentResolver().takePersistableUriPermission(selectedImage, takeFlags);
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//                final int takeFlags = data.getFlags()
+//                        & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+//                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+//                getContentResolver().takePersistableUriPermission(selectedImage, takeFlags);
+//            }
+
         }
 
-        if(selectedAudio != null) {
+        if (selectedAudio != null) {
             // We got an audio-file-uri
             audio = selectedAudio;
 
             // Take permission
-            //getContentResolver().takePersistableUriPermission(selectedAudio, takeFlags);
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT){
+//                final int takeFlags = data.getFlags()
+//                        & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+//                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+//                getContentResolver().takePersistableUriPermission(selectedAudio, takeFlags);
+//            }
+
+
         }
     }
 
@@ -111,7 +125,7 @@ public class NewItemActivity extends Activity {
      * @param view
      */
     public void createNewItem(View view) {
-        if(image != null && audio != null) {
+        if (image != null && audio != null) {
             SpeechItem speechItem = new SpeechItem(image, audio);
             DataHelper.addItemToList(speechItem, this);
         }
@@ -127,12 +141,7 @@ public class NewItemActivity extends Activity {
         photoPickerIntent.setType("image/*");
         // Check if there's an app which can handle this intent
         if (photoPickerIntent.resolveActivity(getPackageManager()) != null) {
-
-            takeFlags = photoPickerIntent.getFlags()
-                    & (Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-
-            startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+           startActivityForResult(photoPickerIntent, SELECT_PHOTO);
         }
     }
 
@@ -148,10 +157,6 @@ public class NewItemActivity extends Activity {
 
         // Check if there's an app which can handle this intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            takeFlags = takePictureIntent.getFlags()
-                    & (Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-
             startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
@@ -166,14 +171,8 @@ public class NewItemActivity extends Activity {
         intent.setType("audio/*");
         intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
 
-        takeFlags = intent.getFlags()
-                & (Intent.FLAG_GRANT_READ_URI_PERMISSION
-                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-
         // Let him choose with that automatically generated chooser
         startActivityForResult(Intent.createChooser(intent, getString(R.string.new_item_audio_chooser)), SELECT_AUDIO);
-
-
     }
 
     /**
@@ -182,7 +181,7 @@ public class NewItemActivity extends Activity {
      * @param view
      */
     public void startRecordingAudio(View view) {
-        audioRecorder = new AudioRecorder();
+        audioRecorder = new AudioRecorder(this);
         audioRecorder.startRecording();
     }
 
@@ -192,8 +191,8 @@ public class NewItemActivity extends Activity {
      * @param view
      */
     public void stopRecordingAudio(View view) {
-        if(audioRecorder != null) {
-            audio = audioRecorder.stopRecording();
+        if (audioRecorder != null) {
+            audio = audioRecorder.stopRecording(this);
         }
     }
 }
