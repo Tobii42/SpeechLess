@@ -2,6 +2,7 @@ package de.ol.speechless.app;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
@@ -12,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -24,6 +26,7 @@ public class NewItemActivity extends Activity {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int SELECT_PHOTO = 2;
     private static final int SELECT_AUDIO = 3;
+    public static final int REQUEST_RECORD_AUDIO = 4;
 
     private static final int IMAGE_WIDTH = 300;
 
@@ -122,6 +125,20 @@ public class NewItemActivity extends Activity {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == REQUEST_RECORD_AUDIO) {
+
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Start recording the audio
+                startRecordingAudio(null);
+            } else {
+                Toast.makeText(this, "Permission was not granted", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
     /**
      * Creates a new item (with picture and sound) and adds it to the ItemList
      *
@@ -148,7 +165,7 @@ public class NewItemActivity extends Activity {
         photoPickerIntent.setType("image/*");
         // Check if there's an app which can handle this intent
         if (photoPickerIntent.resolveActivity(getPackageManager()) != null) {
-           startActivityForResult(photoPickerIntent, SELECT_PHOTO);
+            startActivityForResult(photoPickerIntent, SELECT_PHOTO);
         }
     }
 
@@ -188,8 +205,12 @@ public class NewItemActivity extends Activity {
      * @param view
      */
     public void startRecordingAudio(View view) {
+        if (audioRecorder != null) {
+            // stop the old recording to not have multiple recordings in background
+            audioRecorder.stopRecording(this);
+        }
         audioRecorder = new AudioRecorder(this);
-        audioRecorder.startRecording();
+        audioRecorder.startRecording(this);
         ImageView nowRecording = (ImageView) findViewById(R.id.nowRecordingImageView);
         nowRecording.setVisibility(ImageView.VISIBLE);
     }

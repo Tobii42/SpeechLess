@@ -1,15 +1,23 @@
 package de.ol.speechless.util;
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.content.FileProvider;
 
 import java.io.File;
 import java.io.IOException;
 
+import de.ol.speechless.app.NewItemActivity;
+
 /**
- * Created by Tobias on 02.03.14.
+ * @author Tobias
+ * @since 02.03.14.
  */
 public class AudioRecorder {
 
@@ -26,7 +34,18 @@ public class AudioRecorder {
     /**
      * Starts recording (and saving) the audio from the microphone
      */
-    public void startRecording() {
+    public void startRecording(Activity activity) {
+
+        // First we need the permission to use the microphone
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (activity.checkSelfPermission(Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+                // We don't have the permission
+                activity.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO}, NewItemActivity.REQUEST_RECORD_AUDIO);
+                // We have to return to go on when we have the permission
+                return;
+            }
+        }
+
         mediaRecorder = new MediaRecorder();
         mediaRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
         mediaRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
@@ -36,16 +55,18 @@ public class AudioRecorder {
         try {
             mediaRecorder.prepare();
         } catch (IOException e) {
-
+            e.printStackTrace();
         }
         mediaRecorder.start();
     }
 
     /**
      * Stops recording
+     *
      * @return Uri to the audio-file
      */
     public Uri stopRecording(Context context) {
+        if (mediaRecorder == null) return null;
         mediaRecorder.stop();
         mediaRecorder.release();
         mediaRecorder = null;
@@ -53,11 +74,9 @@ public class AudioRecorder {
     }
 
     /**
-     *
      * @return Uri to the audio-file
      */
     private Uri getAudioUri(Context context) {
-        Uri contentUri = FileProvider.getUriForFile(context, "de.ol.speechless.fileprovider", path);
-        return contentUri;
+        return FileProvider.getUriForFile(context, "de.ol.speechless.fileprovider", path);
     }
 }
